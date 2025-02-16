@@ -62,14 +62,14 @@ public class StringWithEndIndexesCompaper : IComparer<(string, int)>
         {
             if (i == str1.Item2 || i == str2.Item2)
             {
-                return str1.Item2 > str2.Item2 ? 1 : -1;
+                return str1.Item2 < str2.Item2 ? 1 : -1;
             }
             i++;
         }
 
         if (i == str1.Item2 || i == str2.Item2)
         {
-            return i == str1.Item2 ? -1 : 1;
+            return i == str1.Item2 ? 1 : -1;
         }
 
         return str1.Item1[i].CompareTo(str2.Item1[i]);
