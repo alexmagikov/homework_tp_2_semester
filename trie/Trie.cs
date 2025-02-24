@@ -31,6 +31,11 @@ public class Trie
             return false;
         }
 
+        if (this.Contains(element))
+        {
+            return false;
+        }
+
         var index = 0;
         var currentVertex = this.root;
         while (index < element.Length)
@@ -40,6 +45,7 @@ public class Trie
                 currentVertex.NextVertexes[element[index]] = new ();
             }
 
+            currentVertex.NumChildens++;
             currentVertex = currentVertex.NextVertexes[element[index]];
             index++;
         }
@@ -94,6 +100,11 @@ public class Trie
             return false;
         }
 
+        if (!this.Contains(element))
+        {
+            return false;
+        }
+
         var index = 0;
         var currentVertex = this.root;
         while (index < element.Length)
@@ -103,6 +114,7 @@ public class Trie
                 return false;
             }
 
+            currentVertex.NumChildens--;
             currentVertex = currentVertex.NextVertexes[element[index]];
             index++;
         }
@@ -136,7 +148,7 @@ public class Trie
             index++;
         }
 
-        return currentVertex.NextVertexes.Count;
+        return currentVertex.NumChildens;
     }
 
     /// <summary>
@@ -153,5 +165,10 @@ public class Trie
         /// Gets or sets a value indicating whether this vertex is a terminal (end of a word).
         /// </summary>
         public bool IsTerminal { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets infromation for method HowManyStartsWithPrefix(string prefix).
+        /// </summary>
+        public int NumChildens { get; set; } = 0;
     }
 }

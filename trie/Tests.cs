@@ -23,8 +23,10 @@ public class Tests
             TestForNormalValueForRemove(),
             TestForSizeValueForAdd(),
             TestForSizeValueForRemove(),
-            TestForHowManyStartsWithPrefixe(),
-            TestForHowManyStartsWithPrefixeForNullValue(),
+            TestForHowManyStartsWithPrefix(),
+            TestForHowManyStartsWithPrefixForNullValue(),
+            TestForHowManyStartsWithPrefixWith2Branch(),
+            TestForHowManyStartsWithPrefixWith2WordsIn1Branch(),
         };
 
         foreach (var test in tests)
@@ -83,7 +85,7 @@ public class Tests
         return trie.Size == 1;
     }
 
-    private static bool TestForHowManyStartsWithPrefixe()
+    private static bool TestForHowManyStartsWithPrefix()
     {
         Trie trie = new ();
         trie.Add("smthng1");
@@ -91,7 +93,25 @@ public class Tests
         return trie.HowManyStartsWithPrefix("smthng") == 2;
     }
 
-    private static bool TestForHowManyStartsWithPrefixeForNullValue()
+    private static bool TestForHowManyStartsWithPrefixWith2Branch()
+    {
+        Trie trie = new ();
+        trie.Add("smthngwwa");
+        trie.Add("smthngwwb");
+        return trie.HowManyStartsWithPrefix("smthng") == 2;
+    }
+
+    private static bool TestForHowManyStartsWithPrefixWith2WordsIn1Branch()
+    {
+        Trie trie = new ();
+        trie.Add("smthngwwa");
+        trie.Add("smthngwwaa");
+        trie.Add("smthngwwaa");
+        trie.Add("smthngwwaaи");
+        return trie.HowManyStartsWithPrefix("smthng") == 3;
+    }
+
+    private static bool TestForHowManyStartsWithPrefixForNullValue()
     {
         Trie trie = new ();
         return trie.HowManyStartsWithPrefix(string.Empty) == 0;
