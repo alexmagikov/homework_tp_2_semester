@@ -137,7 +137,6 @@ public class CompressionTrie
     /// <returns>Pair of num of code and errorCode.</returns>
     public (int, bool) GetCode(byte[] element)
     {
-
         var index = 0;
         var currentVertex = this.root;
         while (index < element.Length)

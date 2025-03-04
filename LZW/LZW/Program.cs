@@ -45,7 +45,7 @@ CompressionTrie trie = new ();
 Console.WriteLine("Содержимое файла в байтах:");
 foreach (byte b in fileBytes)
 {
-    Console.Write($"{b:X2} ");
+    Console.Write($"{b} ");
 }
 
 Console.WriteLine();
@@ -59,3 +59,10 @@ foreach (var b in result)
 LZWcompressor.WriteInFile(result, @"C:\Users\User\source\repos\homework_tp_2_smstr\homework_tp_2_semester\LZW\LZW\test.zipped");
 
 Console.WriteLine(LZWfunctions.GetCoefficient(fileBytes, result));
+
+var n = LZWdecompressor.Decompress(result);
+
+foreach (var b in n)
+{
+    Console.Write($"{b} ");
+}

@@ -18,12 +18,15 @@ public class LZWcompressor
     {
         int code = 256;
         var trieOfBytes = CompressionTrie.InitializeTrieBytes();
+
         List<int> compressedSequence = new ();
         List<byte> currentElement = new ();
+
         foreach (byte element in sequence)
         {
             List<byte> tmpElement = new List<byte>(currentElement);
             tmpElement.Add(element);
+
             if (!trieOfBytes.Contains(tmpElement.ToArray()))
             {
                 compressedSequence.Add(trieOfBytes.GetCode(currentElement.ToArray()).Item1);
@@ -56,26 +59,44 @@ public class LZWcompressor
         using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
         using (BinaryWriter writer = new BinaryWriter(fileStream))
         {
+            List<byte> currentBytes = new ();
             foreach (uint number in sequence)
             {
-                writer.Write(number);
+                var prefixCode = 0;
+                if (number < 512)
+                {
+                    prefixCode = 0;
+                }
+                else if (number < 1024)
+                {
+                    prefixCode = 1;
+                }
+                else if (number < 2048)
+                {
+                    prefixCode = 2;
+                }
+                else if (number < 4096)
+                {
+                    prefixCode = 3;
+                }
+                writer.Write(current);
             }
         }
 
         Console.WriteLine($"The converted string was successfully written to the file");
 
-        using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-        using (BinaryReader reader = new BinaryReader(fileStream))
-        {
-            long numberOfValues = fileStream.Length / sizeof(uint);
+        //using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+        //using (BinaryReader reader = new BinaryReader(fileStream))
+        //{
+        //    long numberOfValues = fileStream.Length / sizeof(uint);
 
-            Console.WriteLine($"Чтение {numberOfValues} значений из файла:");
+        //    Console.WriteLine($"Чтение {numberOfValues} значений из файла:");
 
-            for (int i = 0; i < numberOfValues; i++)
-            {
-                uint value = reader.ReadUInt32();
-                Console.WriteLine($"Значение {i + 1}: {value}");
-            }
-        }
+        //    for (int i = 0; i < numberOfValues; i++)
+        //    {
+        //        uint value = reader.ReadUInt32();
+        //        Console.WriteLine($"Значение {i + 1}: {value}");
+        //    }
+        //}
     }
 }
