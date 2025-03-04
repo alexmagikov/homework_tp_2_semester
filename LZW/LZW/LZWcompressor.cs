@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace LZW;
 
 /// <summary>
@@ -54,49 +56,52 @@ public class LZWcompressor
     /// </summary>
     /// <param name="sequence">Array of int codes.</param>
     /// <param name="filePath">Path to put zipped file.</param>
-    public static void WriteInFile(int[] sequence, string filePath)
+    /// <returns>Num of bytes in result file.</returns>
+    /// <exception cref="ArgumentException">If num in sequence > 4096.</exception>
+    public static int WriteInFile(int[] sequence, string filePath)
     {
+        int numBytes = 0;
         using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
         using (BinaryWriter writer = new BinaryWriter(fileStream))
         {
-            List<byte> currentBytes = new ();
-            foreach (uint number in sequence)
+            byte currentByte = 0;
+            int bitPosition = 0;
+            foreach (int number in sequence)
             {
-                var prefixCode = 0;
-                if (number < 512)
+                int bitCount = number switch
                 {
-                    prefixCode = 0;
-                }
-                else if (number < 1024)
+                    // < 64 => 6,
+                    // < 128 => 7,
+                    // < 256 => 8,
+                    < 512 => 9,
+                    < 1024 => 10,
+                    < 2048 => 11,
+                    < 4096 => 12,
+                    _ => throw new ArgumentException($"Число {number} превышает максимально допустимое значение 4095"),
+                };
+
+                for (int i = bitCount - 1; i >= 0; i--)
                 {
-                    prefixCode = 1;
+                    currentByte |= (byte)(((number >> i) & 1) << (7 - bitPosition));
+                    bitPosition++;
+                    if (bitPosition == 8)
+                    {
+                        writer.Write(currentByte);
+                        bitPosition = 0;
+                        currentByte = 0;
+                        numBytes++;
+                    }
                 }
-                else if (number < 2048)
-                {
-                    prefixCode = 2;
-                }
-                else if (number < 4096)
-                {
-                    prefixCode = 3;
-                }
-                writer.Write(current);
+            }
+
+            if (bitPosition > 0)
+            {
+                writer.Write(currentByte);
+                numBytes++;
             }
         }
 
         Console.WriteLine($"The converted string was successfully written to the file");
-
-        //using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-        //using (BinaryReader reader = new BinaryReader(fileStream))
-        //{
-        //    long numberOfValues = fileStream.Length / sizeof(uint);
-
-        //    Console.WriteLine($"Чтение {numberOfValues} значений из файла:");
-
-        //    for (int i = 0; i < numberOfValues; i++)
-        //    {
-        //        uint value = reader.ReadUInt32();
-        //        Console.WriteLine($"Значение {i + 1}: {value}");
-        //    }
-        //}
+        return numBytes;
     }
 }

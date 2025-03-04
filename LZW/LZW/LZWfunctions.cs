@@ -13,10 +13,10 @@ public class LZWfunctions
     /// Return coefficent of compression.
     /// </summary>
     /// <param name="inputSequence">Input sequence.</param>
-    /// <param name="transformedSequence">Transformed sequence of ushort value.</param>
+    /// <param name="numBytesOfResultFile">Num of bytes of result file.</param>
     /// <returns>Coefficent of compression.</returns>
-    public static float GetCoefficient(byte[] inputSequence, int[] transformedSequence)
+    public static float GetCoefficient(byte[] inputSequence, int numBytesOfResultFile)
     {
-        return (float)inputSequence.Length / (transformedSequence.Length * 2);
+        return (float)inputSequence.Length / numBytesOfResultFile;
     }
 }

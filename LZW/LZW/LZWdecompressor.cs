@@ -59,8 +59,70 @@ public class LZWdecompressor
     /// </summary>
     /// <param name="filePath">Path of the file.</param>
     /// <returns>Array of bytes of input data.</returns>
-    public static byte[] ReadFromFile(string filePath)
+    public static List<int> ReadVariableBitData(string filePath)
     {
+        // Читаем все байты из файла
+        byte[] fileBytes = File.ReadAllBytes(filePath);
 
+        // Преобразуем байты в битовую строку
+        string bitString = BytesToBitString(fileBytes);
+
+        // Декодируем данные
+        return DecodeBitString(bitString);
+    }
+
+    /// <summary>
+    /// Преобразует массив байтов в строку битов
+    /// </summary>
+    private static string BytesToBitString(byte[] bytes)
+    {
+        char[] bits = new char[bytes.Length * 8];
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            byte b = bytes[i];
+            for (int j = 0; j < 8; j++)
+            {
+                bits[i * 8 + j] = ((b >> (7 - j)) & 1) == 1 ? '1' : '0';
+            }
+        }
+        return new string(bits);
+    }
+
+    /// <summary>
+    /// Декодирует битовую строку в список значений
+    /// </summary>
+    private static List<int> DecodeBitString(string bitString)
+    {
+        List<int> values = new List<int>();
+        int position = 0;
+
+        // Правила определения длины бита
+        Func<int, int> GetBitLength = (int value) => {
+            if (value < 512) return 9;       // 2^9 = 512
+            if (value < 1024) return 10;     // 2^10 = 1024
+            if (value < 2048) return 11;     // 2^11 = 2048
+            return 12;                       // 2^12 = 4096
+        };
+
+        // Начинаем с 9 бит (минимальная длина)
+        int currentBitLength = 9;
+
+        while (position + currentBitLength <= bitString.Length)
+        {
+            // Извлекаем биты для текущего значения
+            string valueBits = bitString.Substring(position, currentBitLength);
+
+            // Преобразуем биты в число
+            int value = Convert.ToInt32(valueBits, 2);
+            values.Add(value);
+
+            // Перемещаем позицию
+            position += currentBitLength;
+
+            // Определяем длину следующего значения на основе текущего значения
+            currentBitLength = GetBitLength(value);
+        }
+
+        return values;
     }
 }

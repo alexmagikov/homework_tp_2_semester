@@ -5,7 +5,7 @@
 using System.Text;
 using LZW;
 
-string path = @"C:\Users\User\source\repos\homework_tp_2_smstr\homework_tp_2_semester\LZW\LZW\test.txt";
+string path = @"C:\Users\User\source\repos\homework_tp_2_smstr\homework_tp_2_semester\LZW\LZW\test1.txt";
 //FileInfo fileInfo = new FileInfo(path);
 //if (fileInfo.Exists)
 //{
@@ -36,33 +36,42 @@ byte[] fileBytes = File.ReadAllBytes(path);
 string text = Encoding.UTF8.GetString(fileBytes);
 
 // Вывод текста
-Console.WriteLine("Содержимое файла как текст:");
-Console.WriteLine(text);
+//Console.WriteLine("Содержимое файла как текст:");
+//Console.WriteLine(text);
 
 CompressionTrie trie = new ();
 
+byte[] sequence = { 97, 97, 97, 97, 97, 97 };
 // Вывод байтов
 Console.WriteLine("Содержимое файла в байтах:");
-foreach (byte b in fileBytes)
+foreach (var b in sequence)
 {
     Console.Write($"{b} ");
 }
 
 Console.WriteLine();
-var result = LZWcompressor.Compress(fileBytes);
+var result = LZWcompressor.Compress(sequence);
 
 foreach (var b in result)
 {
     Console.Write($"{b} ");
 }
 
-LZWcompressor.WriteInFile(result, @"C:\Users\User\source\repos\homework_tp_2_smstr\homework_tp_2_semester\LZW\LZW\test.zipped");
+int num = LZWcompressor.WriteInFile(result, @"C:\Users\User\source\repos\homework_tp_2_smstr\homework_tp_2_semester\LZW\LZW\test1.zipped");
 
-Console.WriteLine(LZWfunctions.GetCoefficient(fileBytes, result));
+//var n = LZWdecompressor.Decompress(result);
 
-var n = LZWdecompressor.Decompress(result);
+//foreach (var b in n)
+//{
+//    Console.Write($"{b} ");
+//}
 
-foreach (var b in n)
+Console.WriteLine(LZWfunctions.GetCoefficient(fileBytes, num));
+
+List<int> values = LZWdecompressor.ReadVariableBitData(@"C:\Users\User\source\repos\homework_tp_2_smstr\homework_tp_2_semester\LZW\LZW\test.zipped");
+
+Console.WriteLine("Прочитанные значения:");
+foreach (int value in values)
 {
-    Console.Write($"{b} ");
+    Console.Write($"{value} ");
 }
