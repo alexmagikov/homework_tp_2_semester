@@ -23,7 +23,7 @@ public class BWalgo
         }
 
         Array.Sort(permutations, new StringWithEndIndexesCompaper());
-        string result = "";
+        string result = string.Empty;
         int resultEndIndex = 0;
         for (int i = 0; i < str.Length; i++)
         {
@@ -31,6 +31,7 @@ public class BWalgo
             {
                 resultEndIndex = i + 1;
             }
+
             result = result + permutations[i].Item1[(permutations[i].Item2 + str.Length - 1) % str.Length];
         }
 

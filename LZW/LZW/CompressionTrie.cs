@@ -56,7 +56,6 @@ public class CompressionTrie
                 currentVertex.NextVertexes[element[index]] = new ();
             }
 
-            currentVertex.NumChildens++;
             currentVertex = currentVertex.NextVertexes[element[index]];
             index++;
         }
@@ -116,7 +115,6 @@ public class CompressionTrie
                 return false;
             }
 
-            currentVertex.NumChildens--;
             currentVertex = currentVertex.NextVertexes[element[index]];
             index++;
         }
@@ -167,11 +165,6 @@ public class CompressionTrie
         /// Gets or sets a value indicating whether this vertex is a terminal (end of a word).
         /// </summary>
         public bool IsTerminal { get; set; } = false;
-
-        /// <summary>
-        /// Gets or sets infromation for method HowManyStartsWithPrefix(string prefix).
-        /// </summary>
-        public int NumChildens { get; set; } = 0;
 
         /// <summary>
         /// Gets or sets infromation for method HowManyStartsWithPrefix(string prefix).

@@ -89,9 +89,9 @@ public class LZWdecompressor
     }
 
     /// <summary>
-    /// Декодирует битовую строку в список значений
+    /// Декодирует битовую строку в список значений.
     /// </summary>
-    private static List<int> DecodeBitString(string bitString)
+    public static List<int> DecodeBitString(string bitString)
     {
         List<int> values = new List<int>();
         int position = 0;
@@ -124,5 +124,16 @@ public class LZWdecompressor
         }
 
         return values;
+    }
+
+    /// <summary>
+    /// Read byte sequence from file.
+    /// </summary>
+    /// <param name="filePath">Path of the file.</param>
+    /// <returns>Byte sequence from file.</returns>
+    public static byte[] ReadFromFile(string filePath)
+    {
+        byte[] fileBytes = File.ReadAllBytes(filePath);
+        return fileBytes;
     }
 }

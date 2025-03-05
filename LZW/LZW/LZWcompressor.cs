@@ -2,8 +2,6 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System;
-
 namespace LZW;
 
 /// <summary>
@@ -52,56 +50,57 @@ public class LZWcompressor
     }
 
     /// <summary>
-    /// Write in file.
+    /// Transform sequence of int codes to variable length bit sequence.
     /// </summary>
     /// <param name="sequence">Array of int codes.</param>
-    /// <param name="filePath">Path to put zipped file.</param>
-    /// <returns>Num of bytes in result file.</returns>
-    /// <exception cref="ArgumentException">If num in sequence > 4096.</exception>
-    public static int WriteInFile(int[] sequence, string filePath)
+    /// <returns>Array of bytes.</returns>
+    public static byte[] TransformSequence(int[] sequence)
     {
-        int numBytes = 0;
-        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-        using (BinaryWriter writer = new BinaryWriter(fileStream))
+        List<byte> result = new ();
+        byte currentByte = 0;
+        int bitPosition = 0;
+        foreach (int number in sequence)
         {
-            byte currentByte = 0;
-            int bitPosition = 0;
-            foreach (int number in sequence)
-            {
-                int bitCount = number switch
-                {
-                    // < 64 => 6,
-                    // < 128 => 7,
-                    // < 256 => 8,
-                    < 512 => 9,
-                    < 1024 => 10,
-                    < 2048 => 11,
-                    < 4096 => 12,
-                    _ => throw new ArgumentException($"Число {number} превышает максимально допустимое значение 4095"),
-                };
+            int bitCount = 8;
 
-                for (int i = bitCount - 1; i >= 0; i--)
-                {
-                    currentByte |= (byte)(((number >> i) & 1) << (7 - bitPosition));
-                    bitPosition++;
-                    if (bitPosition == 8)
-                    {
-                        writer.Write(currentByte);
-                        bitPosition = 0;
-                        currentByte = 0;
-                        numBytes++;
-                    }
-                }
+            while (number >= (1 << bitCount)) // Проверяем, нужно ли увеличить bitCount
+            {
+                bitCount++;
             }
 
-            if (bitPosition > 0)
+            for (int i = bitCount - 1; i >= 0; i--)
             {
-                writer.Write(currentByte);
-                numBytes++;
+                currentByte |= (byte)(((number >> i) & 1) << (7 - bitPosition));
+                bitPosition++;
+                if (bitPosition == 8)
+                {
+                    result.Add(currentByte);
+                    bitPosition = 0;
+                    currentByte = 0;
+                }
             }
         }
 
+        if (bitPosition > 0)
+        {
+            result.Add(currentByte);
+        }
+
+        return result.ToArray();
+    }
+
+    /// <summary>
+    /// Write transformed sequence in file.
+    /// </summary>
+    /// <param name="transformedSequence">Transformed sequence.</param>
+    /// <param name="filePath">Path of the file.</param>
+    public static void WriteInFile(byte[] transformedSequence, string filePath)
+    {
+        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+        {
+            fileStream.Write(transformedSequence, 0, transformedSequence.Length);
+        }
+
         Console.WriteLine($"The converted string was successfully written to the file");
-        return numBytes;
     }
 }

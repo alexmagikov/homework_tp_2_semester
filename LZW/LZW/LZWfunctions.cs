@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System.Reflection;
+
 namespace LZW;
 
 /// <summary>
@@ -18,5 +20,21 @@ public class LZWfunctions
     public static float GetCoefficient(byte[] inputSequence, int numBytesOfResultFile)
     {
         return (float)inputSequence.Length / numBytesOfResultFile;
+    }
+
+    /// <summary>
+    /// Compare LZW compress with BW algo and without BW algo on 2 large length files. 
+    /// </summary>
+    public static void CompareLZWCompressorWithBWAndWithoutBW()
+    {
+        string? exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (exePath == null)
+        {
+            throw new Exception("Не удалось определить путь к исполняемому файлу");
+        }
+
+        string path = Path.Combine(exePath, @"..\..\..\test.txt");
+        path = Path.GetFullPath(path);
+        byte[] fileBytes = File.ReadAllBytes(path);
     }
 }

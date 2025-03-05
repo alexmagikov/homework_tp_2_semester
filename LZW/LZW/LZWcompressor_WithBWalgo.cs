@@ -1,11 +1,18 @@
-﻿namespace LZW;
+﻿// <copyright file="LZWcompressor_WithBWalgo.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
+namespace LZW;
+
+/// <summary>
+/// LZW with BW.
+/// </summary>
 public class LZWcompressor_WithBWalgo
 {
     /// <summary>
     /// Forward conversion of LZW.
     /// </summary>
-    /// <param name="sequence">Input array of bytes.</param>
+    /// <param name="str">Input array of bytes.</param>
     /// <returns>Transformed array of int codes.</returns>
     public static int[] Compress(byte[] str)
     {
@@ -15,8 +22,8 @@ public class LZWcompressor_WithBWalgo
         int code = 256;
         var trieOfBytes = CompressionTrie.InitializeTrieBytes();
 
-        List<int> compressedSequence = new();
-        List<byte> currentElement = new();
+        List<int> compressedSequence = new ();
+        List<byte> currentElement = new ();
 
         foreach (byte element in sequence)
         {
