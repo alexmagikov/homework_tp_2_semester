@@ -2,6 +2,8 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
+using System.Reflection.Emit;
+
 namespace LZW;
 
 /// <summary>
@@ -56,22 +58,23 @@ public class LZWcompressor
     /// <returns>Array of bytes.</returns>
     public static byte[] TransformSequence(int[] sequence)
     {
-        List<byte> result = new ();
+        List<byte> result = new List<byte>();
         byte currentByte = 0;
         int bitPosition = 0;
-        foreach (int number in sequence)
+
+        foreach (int code in sequence)
         {
             int bitCount = 8;
-
-            while (number >= (1 << bitCount)) // Проверяем, нужно ли увеличить bitCount
+            while (code >= (1 << bitCount))
             {
                 bitCount++;
             }
 
             for (int i = bitCount - 1; i >= 0; i--)
             {
-                currentByte |= (byte)(((number >> i) & 1) << (7 - bitPosition));
+                currentByte |= (byte)(((code >> i) & 1) << (7 - bitPosition));
                 bitPosition++;
+
                 if (bitPosition == 8)
                 {
                     result.Add(currentByte);

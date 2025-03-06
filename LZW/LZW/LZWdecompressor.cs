@@ -55,75 +55,47 @@ public class LZWdecompressor
     }
 
     /// <summary>
-    /// Read compressed data.
+    /// Decode byte sequence.
     /// </summary>
-    /// <param name="filePath">Path of the file.</param>
-    /// <returns>Array of bytes of input data.</returns>
-    public static List<int> ReadVariableBitData(string filePath)
+    /// <param name="compressedSequence">Byte sequence.</param>
+    /// <returns>Array of codes.</returns>
+    public static int[] DecodeByteSequence(byte[] compressedSequence)
     {
-        // Читаем все байты из файла
-        byte[] fileBytes = File.ReadAllBytes(filePath);
+        List<int> result = new List<int>();
+        int bitCount = 8;
+        int currentCode = 0;
+        int bitsRead = 0;
 
-        // Преобразуем байты в битовую строку
-        string bitString = BytesToBitString(fileBytes);
-
-        // Декодируем данные
-        return DecodeBitString(bitString);
-    }
-
-    /// <summary>
-    /// Преобразует массив байтов в строку битов
-    /// </summary>
-    private static string BytesToBitString(byte[] bytes)
-    {
-        char[] bits = new char[bytes.Length * 8];
-        for (int i = 0; i < bytes.Length; i++)
+        foreach (byte b in compressedSequence)
         {
-            byte b = bytes[i];
-            for (int j = 0; j < 8; j++)
+            for (int i = 7; i >= 0; i--)
             {
-                bits[i * 8 + j] = ((b >> (7 - j)) & 1) == 1 ? '1' : '0';
+                // Читаем биты из байта
+                int bit = (b >> i) & 1;
+                currentCode = (currentCode << 1) | bit;
+                bitsRead++;
+
+                // Если накопили достаточно бит для текущего кода
+                if (bitsRead == bitCount)
+                {
+                    result.Add(currentCode);
+                    currentCode = 0;
+                    bitsRead = 0;
+                    if (result.Count >= (1 << bitCount) - 255)
+                    {
+                        bitCount++;
+                    }
+                }
             }
         }
-        return new string(bits);
-    }
 
-    /// <summary>
-    /// Декодирует битовую строку в список значений.
-    /// </summary>
-    public static List<int> DecodeBitString(string bitString)
-    {
-        List<int> values = new List<int>();
-        int position = 0;
-
-        // Правила определения длины бита
-        Func<int, int> GetBitLength = (int value) => {
-            if (value < 512) return 9;       // 2^9 = 512
-            if (value < 1024) return 10;     // 2^10 = 1024
-            if (value < 2048) return 11;     // 2^11 = 2048
-            return 12;                       // 2^12 = 4096
-        };
-
-        // Начинаем с 9 бит (минимальная длина)
-        int currentBitLength = 9;
-
-        while (position + currentBitLength <= bitString.Length)
+        // Если остались необработанные биты
+        if (bitsRead > 0)
         {
-            // Извлекаем биты для текущего значения
-            string valueBits = bitString.Substring(position, currentBitLength);
-
-            // Преобразуем биты в число
-            int value = Convert.ToInt32(valueBits, 2);
-            values.Add(value);
-
-            // Перемещаем позицию
-            position += currentBitLength;
-
-            // Определяем длину следующего значения на основе текущего значения
-            currentBitLength = GetBitLength(value);
+            result.Add(currentCode);
         }
 
-        return values;
+        return result.ToArray();
     }
 
     /// <summary>

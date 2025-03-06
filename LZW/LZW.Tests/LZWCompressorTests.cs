@@ -11,7 +11,7 @@ public class TestsForLZWCompressor
     }
 
     [Test]
-    public void TestForCompressForStaticValue()
+    public void TestForCompressForEqualValueSequence()
     {
         byte[] sequence = { 97, 97, 97, 97, 97, 97 };
         int[] expected = { 97, 256, 257 };
@@ -29,16 +29,16 @@ public class TestsForLZWCompressor
     [Test]
     public void TestForTransformSequenceForNormalValue()
     {
-        int[] sequence = { 97, 98, 256, 257 };
-        byte[] expected = { 97, 98, 128, 64, 64 };
+        int[] sequence = { 97, 98, 256, 256};
+        byte[] expected = { 97, 98, 128, 64, 0 };
         Assert.That(LZWcompressor.TransformSequence(sequence), Is.EqualTo(expected));
     }
 
     [Test]
     public void TestForTransformSequenceForTwoDifferentValue()
     {
-        int[] sequence = { 97, 98, 256, 1500 };
-        byte[] expected = { 97, 98, 128, 93, 192 };
+        int[] sequence = { 97, 98, 256, 512, 566 };
+        byte[] expected = { 97, 98, 128, 64, 17, 176 };
         Assert.That(LZWcompressor.TransformSequence(sequence), Is.EqualTo(expected));
     }
 

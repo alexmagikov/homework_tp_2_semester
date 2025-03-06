@@ -18,14 +18,14 @@ public class LZWcompressor_WithBWalgo
     {
         string sequence = System.Text.Encoding.UTF8.GetString(str);
         sequence = BWalgo.ForwardConversion(sequence).Item1;
+        byte[] sequenceBytes = System.Text.Encoding.UTF8.GetBytes(sequence);
 
         int code = 256;
         var trieOfBytes = CompressionTrie.InitializeTrieBytes();
-
         List<int> compressedSequence = new ();
         List<byte> currentElement = new ();
 
-        foreach (byte element in sequence)
+        foreach (byte element in sequenceBytes)
         {
             List<byte> tmpElement = new List<byte>(currentElement);
             tmpElement.Add(element);

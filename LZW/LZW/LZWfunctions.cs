@@ -36,5 +36,17 @@ public class LZWfunctions
         string path = Path.Combine(exePath, @"..\..\..\test.txt");
         path = Path.GetFullPath(path);
         byte[] fileBytes = File.ReadAllBytes(path);
+
+        int[] resultByLZWCompressor = LZWcompressor.Compress(fileBytes);
+        int[] resultByLZWCompressorWithBW = LZWcompressor_WithBWalgo.Compress(fileBytes);
+
+        byte[] transformSequenceWithLZW = LZWcompressor.TransformSequence(resultByLZWCompressor);
+        byte[] transformSequenceWithLZWWithBW = LZWcompressor.TransformSequence(resultByLZWCompressorWithBW);
+
+        float coefficentWithLZW = GetCoefficient(fileBytes, transformSequenceWithLZW.Length);
+        float coefficentWithLZWWithBw = GetCoefficient(fileBytes, transformSequenceWithLZWWithBW.Length);
+
+        Console.WriteLine($"Coefficent of transform without BW: {coefficentWithLZW}");
+        Console.WriteLine($"Coefficent of transform with BW: {coefficentWithLZWWithBw}");
     }
 }
