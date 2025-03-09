@@ -95,40 +95,6 @@ public class CompressionTrie
     }
 
     /// <summary>
-    /// remove element from tree.
-    /// </summary>
-    /// <param name="element">element.</param>
-    /// <returns>true if element is contained, else - false.</returns>
-    public bool Remove(byte[] element)
-    {
-        if (!this.Contains(element))
-        {
-            return false;
-        }
-
-        var index = 0;
-        var currentVertex = this.root;
-        while (index < element.Length)
-        {
-            if (!currentVertex.NextVertexes.ContainsKey(element[index]))
-            {
-                return false;
-            }
-
-            currentVertex = currentVertex.NextVertexes[element[index]];
-            index++;
-        }
-
-        if (currentVertex.IsTerminal)
-        {
-            currentVertex.IsTerminal = false;
-        }
-
-        this.Size--;
-        return true;
-    }
-
-    /// <summary>
     /// Get Code of sequence of bytes.
     /// </summary>
     /// <param name="element">Sequence of bytes.</param>

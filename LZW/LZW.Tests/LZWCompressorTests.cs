@@ -27,26 +27,50 @@ public class TestsForLZWCompressor
     }
 
     [Test]
-    public void TestForTransformSequenceForNormalValue()
+    public void TestForCompressForNullValue()
+    {
+        byte[] sequence = {};
+        int[] expected = {};
+        Assert.That(LZWcompressor.Compress(sequence), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestForEncodeByteSequenceeForNormalValue()
     {
         int[] sequence = { 97, 98, 256, 256};
-        byte[] expected = { 97, 98, 128, 64, 0 };
-        Assert.That(LZWcompressor.TransformSequence(sequence), Is.EqualTo(expected));
+        byte[] expected = { 48, 152, 168, 5, 0 };
+        Assert.That(LZWcompressor.EncodeByteSequencee(sequence), Is.EqualTo(expected));
     }
 
     [Test]
-    public void TestForTransformSequenceForTwoDifferentValue()
+    public void TestForEncodeByteSequenceeForTwoDifferentValue()
     {
         int[] sequence = { 97, 98, 256, 512, 566 };
-        byte[] expected = { 97, 98, 128, 64, 17, 176 };
-        Assert.That(LZWcompressor.TransformSequence(sequence), Is.EqualTo(expected));
+        byte[] expected = { 48, 152, 168, 6, 128, 52, 108};
+        Assert.That(LZWcompressor.EncodeByteSequencee(sequence), Is.EqualTo(expected));
     }
 
     [Test]
-    public void TestForTransformSequenceFor8BitValue()
+    public void TestForEncodeByteSequenceeFor8BitValue()
     {
         int[] sequence = { 97, 98 };
-        byte[] expected = { 97, 98 };
-        Assert.That(LZWcompressor.TransformSequence(sequence), Is.EqualTo(expected));
+        byte[] expected = { 48, 152, 128 };
+        Assert.That(LZWcompressor.EncodeByteSequencee(sequence), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestForEncodeByteSequenceeFor0Value()
+    {
+        int[] sequence = { 0 };
+        byte[] expected = { 0, 0};
+        Assert.That(LZWcompressor.EncodeByteSequencee(sequence), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestForEncodeByteSequenceeForNullValue()
+    {
+        int[] sequence = {};
+        byte[] expected = {};
+        Assert.That(LZWcompressor.EncodeByteSequencee(sequence), Is.EqualTo(expected));
     }
 }

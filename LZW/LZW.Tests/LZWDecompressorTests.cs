@@ -26,11 +26,35 @@ public class TestsForLZWDecompressor
         Assert.That(LZWdecompressor.Decompress(sequence), Is.EqualTo(expected));
     }
 
-    //[Test]
-    //public void TestForDecodeForNormalValue()
-    //{
-    //    int[] expected = { 97, 98, 256, 257 };
-    //    byte[] sequence = { 97, 98, 128, 64, 64 };
-    //    Assert.That(LZWdecompressor.e(sequence), Is.EqualTo(expected));
-    //}
+    [Test]
+    public void TestForDecodeByteSequenceeForNormalValue()
+    {
+        int[] expected = { 97, 98, 256, 256 };
+        byte[] sequence = { 48, 152, 168, 5, 0 };
+        Assert.That(LZWdecompressor.DecodeByteSequence(sequence), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestForDecodeByteSequenceeForTwoDifferentValue()
+    {
+        int[] expected = { 97, 98, 256, 512, 566 };
+        byte[] sequence = { 48, 152, 168, 6, 128, 52, 108 };
+        Assert.That(LZWdecompressor.DecodeByteSequence(sequence), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestForDecodeByteSequenceeFor8BitValue()
+    {
+        int[] expected = { 97, 98 };
+        byte[] sequence = { 48, 152, 128 };
+        Assert.That(LZWdecompressor.DecodeByteSequence(sequence), Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void TestForDecodeByteSequenceeFor0Value()
+    {
+        int[] expected = { 0 };
+        byte[] sequence = { 0, 0 };
+        Assert.That(LZWdecompressor.DecodeByteSequence(sequence), Is.EqualTo(expected));
+    }
 }

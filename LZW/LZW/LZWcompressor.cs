@@ -2,8 +2,6 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System.Reflection.Emit;
-
 namespace LZW;
 
 /// <summary>
@@ -56,7 +54,7 @@ public class LZWcompressor
     /// </summary>
     /// <param name="sequence">Array of int codes.</param>
     /// <returns>Array of bytes.</returns>
-    public static byte[] TransformSequence(int[] sequence)
+    public static byte[] EncodeByteSequencee(int[] sequence)
     {
         List<byte> result = new List<byte>();
         byte currentByte = 0;
@@ -65,16 +63,30 @@ public class LZWcompressor
         foreach (int code in sequence)
         {
             int bitCount = 8;
+            int prefix = 0;
             while (code >= (1 << bitCount))
             {
                 bitCount++;
+                prefix |= 1 << (bitCount - 8);
+            }
+
+            for (int i = bitCount - 8; i >= 0; i--)
+            {
+                currentByte |= (byte)(((prefix >> i) & 1) << (7 - bitPosition));
+                bitPosition++;
+
+                if (bitPosition == 8)
+                {
+                    result.Add(currentByte);
+                    bitPosition = 0;
+                    currentByte = 0;
+                }
             }
 
             for (int i = bitCount - 1; i >= 0; i--)
             {
                 currentByte |= (byte)(((code >> i) & 1) << (7 - bitPosition));
                 bitPosition++;
-
                 if (bitPosition == 8)
                 {
                     result.Add(currentByte);
@@ -93,13 +105,18 @@ public class LZWcompressor
     }
 
     /// <summary>
-    /// Write transformed sequence in file.
+    /// Create new zipped file by input file and write to this encoded data.
     /// </summary>
     /// <param name="transformedSequence">Transformed sequence.</param>
     /// <param name="filePath">Path of the file.</param>
     public static void WriteInFile(byte[] transformedSequence, string filePath)
     {
-        using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("Исходный файл не найден.", filePath);
+        }
+
+        using (FileStream fileStream = new FileStream(filePath + ".zipped", FileMode.Create))
         {
             fileStream.Write(transformedSequence, 0, transformedSequence.Length);
         }

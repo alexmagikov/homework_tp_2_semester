@@ -24,14 +24,6 @@ public class TestsForTrie
     }
 
     [Test]
-    public void TestForRemoveForTrieForENormalValue()
-    {
-        trie.Add([(byte)1], 0);
-        trie.Remove([(byte)1]);
-        Assert.That(trie.Contains([(byte)1]), Is.EqualTo(false));
-    }
-
-    [Test]
     public void TestForSizeForTrieForNormalValue()
     {
         trie.Add([(byte)1], 0);
