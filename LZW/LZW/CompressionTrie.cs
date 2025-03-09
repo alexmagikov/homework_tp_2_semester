@@ -35,12 +35,12 @@ public class CompressionTrie
     }
 
     /// <summary>
-    /// Add string to Trie.
+    /// Add sequence of bytes to Trie.
     /// </summary>
-    /// <param name="element">String.</param>
+    /// <param name="element">Sequence of bytes.</param>
     /// <param name="code">Code.</param>
-    /// <returns>True if string is the first. </returns>
-    public bool Add(byte[] element, int code)
+    /// <returns>True if sequence of bytes is the first. </returns>
+    public bool Add(List<byte> element, int code)
     {
         if (this.Contains(element))
         {
@@ -49,14 +49,14 @@ public class CompressionTrie
 
         var index = 0;
         var currentVertex = this.root;
-        while (index < element.Length)
+        foreach (var byteElement in element)
         {
-            if (!currentVertex.NextVertexes.ContainsKey(element[index]))
+            if (!currentVertex.NextVertexes.ContainsKey(byteElement))
             {
-                currentVertex.NextVertexes[element[index]] = new ();
+                currentVertex.NextVertexes[byteElement] = new ();
             }
 
-            currentVertex = currentVertex.NextVertexes[element[index]];
+            currentVertex = currentVertex.NextVertexes[byteElement];
             index++;
         }
 
@@ -72,22 +72,22 @@ public class CompressionTrie
     }
 
     /// <summary>
-    /// return is string contained in Trie.
+    /// Return is sequence of bytes contained in Trie.
     /// </summary>
-    /// <param name="element">string.</param>
-    /// <returns>true if string is contained, else - false.</returns>
-    public bool Contains(byte[] element)
+    /// <param name="element">Sequence of bytes.</param>
+    /// <returns>True if sequence of bytes is contained, else - false.</returns>
+    public bool Contains(List<byte> element)
     {
         var index = 0;
         var currentVertex = this.root;
-        while (index < element.Length)
+        foreach (var byteElement in element)
         {
-            if (!currentVertex.NextVertexes.ContainsKey(element[index]))
+            if (!currentVertex.NextVertexes.ContainsKey(byteElement))
             {
                 return false;
             }
 
-            currentVertex = currentVertex.NextVertexes[element[index]];
+            currentVertex = currentVertex.NextVertexes[byteElement];
             index++;
         }
 
@@ -99,18 +99,18 @@ public class CompressionTrie
     /// </summary>
     /// <param name="element">Sequence of bytes.</param>
     /// <returns>Pair of num of code and errorCode.</returns>
-    public (int, bool) GetCode(byte[] element)
+    public (int, bool) GetCode(List<byte> element)
     {
         var index = 0;
         var currentVertex = this.root;
-        while (index < element.Length)
+        foreach (var byteElement in element)
         {
-            if (!currentVertex.NextVertexes.ContainsKey(element[index]))
+            if (!currentVertex.NextVertexes.ContainsKey(byteElement))
             {
                 return (0, false);
             }
 
-            currentVertex = currentVertex.NextVertexes[element[index]];
+            currentVertex = currentVertex.NextVertexes[byteElement];
             index++;
         }
 

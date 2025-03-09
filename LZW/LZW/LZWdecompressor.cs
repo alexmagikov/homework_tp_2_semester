@@ -16,36 +16,39 @@ public class LZWdecompressor
     /// <returns>Input sequence.</returns>
     public static byte[] Decompress(int[] compressedSequence)
     {
-        var dictionaryOfCodes = new Dictionary<int, byte[]>();
+        var dictionaryOfCodes = new Dictionary<int, List<byte>>();
         for (int i = 0; i < 256; i++)
         {
-            dictionaryOfCodes[i] = new byte[] { (byte)i };
+            dictionaryOfCodes[i] = new List<byte> { (byte)i };
         }
 
         int nextCode = 256;
-        byte[] previousSequence = dictionaryOfCodes[compressedSequence[0]];
+
+        List<byte> previousSequence = new List<byte>(dictionaryOfCodes[compressedSequence[0]]);
         List<byte> result = new List<byte>(previousSequence);
 
         for (int i = 1; i < compressedSequence.Length; i++)
         {
             int code = compressedSequence[i];
-            byte[] currentSequence;
+            List<byte> currentSequence;
 
             if (dictionaryOfCodes.ContainsKey(code))
             {
-                currentSequence = dictionaryOfCodes[code];
+                currentSequence = new List<byte>(dictionaryOfCodes[code]);
             }
             else
             {
-                currentSequence = previousSequence.Concat([previousSequence[0]]).ToArray();
+                currentSequence = new List<byte>(previousSequence);
+                currentSequence.Add(previousSequence[0]);
             }
 
             result.AddRange(currentSequence);
 
-            byte[] newSequence = previousSequence.Concat([currentSequence[0]]).ToArray();
+            List<byte> newSequence = new List<byte>(previousSequence);
+            newSequence.Add(currentSequence[0]);
+
             dictionaryOfCodes[nextCode] = newSequence;
             nextCode++;
-
             previousSequence = currentSequence;
         }
 
