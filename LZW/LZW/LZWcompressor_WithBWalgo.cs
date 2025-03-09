@@ -20,35 +20,6 @@ public class LZWcompressor_WithBWalgo
         sequence = BWalgo.ForwardConversion(sequence).Item1;
         byte[] sequenceBytes = System.Text.Encoding.UTF8.GetBytes(sequence);
 
-        int code = 256;
-        var trieOfBytes = CompressionTrie.InitializeTrieBytes();
-        List<int> compressedSequence = new ();
-        List<byte> currentElement = new ();
-
-        foreach (byte element in sequenceBytes)
-        {
-            List<byte> tmpElement = new List<byte>(currentElement);
-            tmpElement.Add(element);
-
-            if (!trieOfBytes.Contains(tmpElement.ToArray()))
-            {
-                compressedSequence.Add(trieOfBytes.GetCode(currentElement.ToArray()).Item1);
-                trieOfBytes.Add(tmpElement.ToArray(), code);
-                currentElement.Clear();
-                currentElement.Add(element);
-                code++;
-            }
-            else
-            {
-                currentElement = tmpElement;
-            }
-        }
-
-        if (currentElement.Count > 0)
-        {
-            compressedSequence.Add(trieOfBytes.GetCode(currentElement.ToArray()).Item1);
-        }
-
-        return compressedSequence.ToArray();
+        return LZWcompressor.Compress(sequenceBytes);
     }
 }

@@ -5,7 +5,7 @@
 namespace LZW;
 
 /// <summary>
-/// LZW algo.
+/// LZW algo with methods: Compress, Encode, WriteInFile.
 /// </summary>
 public class LZWcompressor
 {
@@ -108,19 +108,14 @@ public class LZWcompressor
     /// Create new zipped file by input file and write to this encoded data.
     /// </summary>
     /// <param name="transformedSequence">Transformed sequence.</param>
-    /// <param name="filePath">Path of the file.</param>
+    /// <param name="filePath">Path of input file.</param>
     public static void WriteInFile(byte[] transformedSequence, string filePath)
     {
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException("Исходный файл не найден.", filePath);
-        }
-
         using (FileStream fileStream = new FileStream(filePath + ".zipped", FileMode.Create))
         {
             fileStream.Write(transformedSequence, 0, transformedSequence.Length);
         }
 
-        Console.WriteLine($"The converted string was successfully written to the file");
+        Console.WriteLine($"The converted sequence was successfully written to the file");
     }
 }

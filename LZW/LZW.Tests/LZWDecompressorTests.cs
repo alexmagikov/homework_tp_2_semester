@@ -57,4 +57,13 @@ public class TestsForLZWDecompressor
         byte[] sequence = { 0, 0 };
         Assert.That(LZWdecompressor.DecodeByteSequence(sequence), Is.EqualTo(expected));
     }
+
+    [Test]
+    public void TestForDecodeAndReturnInputFile()
+    {
+        byte[] inputSeq = { 96, 97, 98 };
+        int[] codes = LZWcompressor.Compress(inputSeq);
+        byte[] encode = LZWcompressor.EncodeByteSequencee(codes);
+        Assert.That(LZWdecompressor.DecodeByteSequence(encode), Is.EqualTo(inputSeq));
+    }
 }

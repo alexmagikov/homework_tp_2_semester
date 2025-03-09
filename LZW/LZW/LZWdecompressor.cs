@@ -37,12 +37,12 @@ public class LZWdecompressor
             }
             else
             {
-                currentSequence = previousSequence.Concat(new byte[] { previousSequence[0] }).ToArray();
+                currentSequence = previousSequence.Concat([previousSequence[0]]).ToArray();
             }
 
             result.AddRange(currentSequence);
 
-            byte[] newSequence = previousSequence.Concat(new byte[] { currentSequence[0] }).ToArray();
+            byte[] newSequence = previousSequence.Concat([currentSequence[0]]).ToArray();
             dictionaryOfCodes[nextCode] = newSequence;
             nextCode++;
 
@@ -124,16 +124,11 @@ public class LZWdecompressor
     /// <param name="filePath">Path of the file.</param>
     public static void WriteInFile(byte[] transformedSequence, string filePath)
     {
-        if (!File.Exists(filePath))
-        {
-            throw new FileNotFoundException("Исходный файл не найден.", filePath);
-        }
-
-        using (FileStream fileStream = new FileStream(Path.ChangeExtension(filePath, ".zipped"), FileMode.Create))
+        using (FileStream fileStream = new FileStream(Path.ChangeExtension(filePath, null), FileMode.Create))
         {
             fileStream.Write(transformedSequence, 0, transformedSequence.Length);
         }
 
-        Console.WriteLine($"The converted string was successfully written to the file");
+        Console.WriteLine($"The converted sequence was successfully written to the file");
     }
 }
