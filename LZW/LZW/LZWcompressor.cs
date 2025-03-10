@@ -19,8 +19,8 @@ public class LZWcompressor
         int code = 256;
         var trieOfBytes = CompressionTrie.InitializeTrieBytes();
 
-        List<int> compressedSequence = new ();
-        List<byte> currentElement = new ();
+        List<int> compressedSequence = new();
+        List<byte> currentElement = new();
 
         foreach (byte element in sequence)
         {
@@ -29,7 +29,7 @@ public class LZWcompressor
 
             if (!trieOfBytes.Contains(tmpElement))
             {
-                compressedSequence.Add(trieOfBytes.GetCode(currentElement).Item1);
+                compressedSequence.Add(trieOfBytes.GetCode(currentElement).Code);
                 trieOfBytes.Add(tmpElement, code);
                 currentElement.Clear();
                 currentElement.Add(element);
@@ -43,7 +43,7 @@ public class LZWcompressor
 
         if (currentElement.Count > 0)
         {
-            compressedSequence.Add(trieOfBytes.GetCode(currentElement).Item1);
+            compressedSequence.Add(trieOfBytes.GetCode(currentElement).Code);
         }
 
         return compressedSequence.ToArray();

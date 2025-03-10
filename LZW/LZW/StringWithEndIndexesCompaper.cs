@@ -1,4 +1,4 @@
-﻿// <copyright file="Comparer.cs" company="PlaceholderCompany">
+﻿// <copyright file="StringWithEndIndexesCompaper.cs" company="PlaceholderCompany">
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 

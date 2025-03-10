@@ -14,7 +14,7 @@ public class BWalgo
     /// </summary>
     /// <param name="str">Input string.</param>
     /// <returns>Transformed string and errorCode.</returns>
-    public static (string, int) ForwardConversion(string str)
+    public static (string Result, int NumStr) ForwardConversion(string str)
     {
         var permutations = new (string, int)[str.Length];
         for (int i = 0; i < str.Length; i++)

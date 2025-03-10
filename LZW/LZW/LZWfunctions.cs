@@ -38,7 +38,7 @@ public class LZWfunctions
         byte[] fileBytes = File.ReadAllBytes(path);
 
         int[] resultByLZWCompressor = LZWcompressor.Compress(fileBytes);
-        int[] resultByLZWCompressorWithBW = LZWcompressor_WithBWalgo.Compress(fileBytes);
+        int[] resultByLZWCompressorWithBW = LZWcompressorWithBWalgo.Compress(fileBytes);
 
         byte[] transformSequenceWithLZW = LZWcompressor.EncodeByteSequencee(resultByLZWCompressor);
         byte[] transformSequenceWithLZWWithBW = LZWcompressor.EncodeByteSequencee(resultByLZWCompressorWithBW);
@@ -47,7 +47,7 @@ public class LZWfunctions
         float coefficentWithLZWWithBw = GetCoefficient(fileBytes, transformSequenceWithLZWWithBW);
 
         Console.WriteLine($"Coefficent of transform without BW on random text: {coefficentWithLZW}");
-        Console.WriteLine($"Coefficent of transform with BW on random text: {coefficentWithLZWWithBw}");
+        Console.WriteLine($"Coefficent of transform with BW on random text: {coefficentWithLZWWithBw}\n");
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public class LZWfunctions
         byte[] fileBytes = File.ReadAllBytes(path);
 
         int[] resultByLZWCompressor = LZWcompressor.Compress(fileBytes);
-        int[] resultByLZWCompressorWithBW = LZWcompressor_WithBWalgo.Compress(fileBytes);
+        int[] resultByLZWCompressorWithBW = LZWcompressorWithBWalgo.Compress(fileBytes);
 
         byte[] transformSequenceWithLZW = LZWcompressor.EncodeByteSequencee(resultByLZWCompressor);
         byte[] transformSequenceWithLZWWithBW = LZWcompressor.EncodeByteSequencee(resultByLZWCompressorWithBW);
@@ -76,6 +76,6 @@ public class LZWfunctions
         float coefficentWithLZWWithBw = GetCoefficient(fileBytes, transformSequenceWithLZWWithBW);
 
         Console.WriteLine($"Coefficent of transform without BW on random sequence of symbols: {coefficentWithLZW}");
-        Console.WriteLine($"Coefficent of transform with BW on random sequence of symbols: {coefficentWithLZWWithBw}");
+        Console.WriteLine($"Coefficent of transform with BW on random sequence of symbols: {coefficentWithLZWWithBw}\n");
     }
 }

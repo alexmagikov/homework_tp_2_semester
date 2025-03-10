@@ -2,7 +2,6 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System.Reflection;
 using LZW;
 
 string path = args[0];
@@ -15,6 +14,7 @@ switch (parameterForCompression)
         int[] compressedData = LZWcompressor.Compress(fileBytes);
         byte[] encodedData = LZWcompressor.EncodeByteSequencee(compressedData);
         LZWcompressor.WriteInFile(encodedData, path);
+        Console.WriteLine($"Coefficent of compression is {LZWfunctions.GetCoefficient(fileBytes, encodedData)}\n");
         break;
 
     case "-u":

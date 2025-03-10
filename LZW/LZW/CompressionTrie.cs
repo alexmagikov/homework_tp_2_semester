@@ -12,7 +12,7 @@ public class CompressionTrie
     /// <summary>
     /// root of Trie.
     /// </summary>
-    private readonly Vertex root = new ();
+    private readonly Vertex root = new();
 
     /// <summary>
     /// Gets or sets size of Trie.
@@ -25,7 +25,7 @@ public class CompressionTrie
     /// <returns>Trie initialized bytes.</returns>
     public static CompressionTrie InitializeTrieBytes()
     {
-        CompressionTrie result = new ();
+        CompressionTrie result = new();
         for (int i = 0; i < 256; i++)
         {
             result.Add([(byte)i], i);
@@ -53,7 +53,7 @@ public class CompressionTrie
         {
             if (!currentVertex.NextVertexes.ContainsKey(byteElement))
             {
-                currentVertex.NextVertexes[byteElement] = new ();
+                currentVertex.NextVertexes[byteElement] = new();
             }
 
             currentVertex = currentVertex.NextVertexes[byteElement];
@@ -99,7 +99,7 @@ public class CompressionTrie
     /// </summary>
     /// <param name="element">Sequence of bytes.</param>
     /// <returns>Pair of num of code and errorCode.</returns>
-    public (int, bool) GetCode(List<byte> element)
+    public (int Code, bool ErrorCode) GetCode(List<byte> element)
     {
         var index = 0;
         var currentVertex = this.root;
@@ -125,7 +125,7 @@ public class CompressionTrie
         /// <summary>
         /// Gets or sets the dictionary of next vertices, indexed by character.
         /// </summary>
-        public Dictionary<byte, Vertex> NextVertexes { get; set; } = new ();
+        public Dictionary<byte, Vertex> NextVertexes { get; set; } = new();
 
         /// <summary>
         /// Gets or sets a value indicating whether this vertex is a terminal (end of a word).
