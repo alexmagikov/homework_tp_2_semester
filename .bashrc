@@ -1,4 +1,3 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
@@ -116,10 +115,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-if git rev-parse --is-inside-git-dir > /dev/null 2>&1; then
-	PS1="\u@\h:\w number of changed files: $(git diff --name-only | wc -l) ~$ ";
+if git diff > /dev/null 2>&1; then
+	PS1="\u@\h:\w number of changed files: $(git diff --name-only | wc -l) $ ";
 else 
-	PS1="\u@\h:\w free memory: $(df | awk 'NR>1 {sum += $4} END {print sum / 1024 / 1024 "gb"}')  number of files: $(ls | wc -l) ~$ "
+	PS1="\u@\h:\w free memory:$(df --block-size=G --output=avail --total | tail -n 1) number of files: $(ls | wc -l) $ "
 fi
-
-
