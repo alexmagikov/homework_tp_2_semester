@@ -115,8 +115,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
-if git diff > /dev/null 2>&1; then
-	PS1="\u@\h:\w number of changed files: $(git diff --name-only | wc -l) $ ";
-else 
-	PS1="\u@\h:\w free memory:$(df --block-size=G --output=avail --total | tail -n 1) number of files: $(ls | wc -l) $ "
+update() {
+	if git diff > /dev/null 2>&1; then
+		echo -n "number of changed files: $(git diff --name-only | wc -l) $ ";
+	else 
+		echo -n "free memory:$(df --block-size=G --output=avail --total | tail -n 1) number of files: $(ls | wc -l) $ "
 fi
+}
+
+PS1='\u@\h:\w $(update)'
