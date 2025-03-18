@@ -117,9 +117,9 @@ fi
 
 update() {
 	if git diff > /dev/null 2>&1; then
-		echo -n "number of changed files: $(git diff --name-only | wc -l) $ ";
+		echo  "number of changed files: $(git diff --name-only | wc -l) $ ";
 	else 
-		echo -n "free memory:$(df --block-size=G --output=avail --total | tail -n 1) number of files: $(ls | wc -l) $ "
+		echo  "free memory:$(df -h / --output=avail | tail -n 1) number of files: $(ls | wc -l) $ "
 fi
 }
 
