@@ -28,6 +28,6 @@ jobs:
         with:
           dotnet-version: '9.x'  # Убедитесь, что версия корректна
       - name: Build
-        run: For /R %%I in (*.sln) do dotnet build "%%I"
+        run: cmd /c For /R %%I in (*.sln) do dotnet build "%%I"
       - name: Run tests
-        run: For /R %%I in (*.sln) do dotnet test "%%I"
+        run: cmd /c For /R %%I in (*.sln) do dotnet test "%%I"
