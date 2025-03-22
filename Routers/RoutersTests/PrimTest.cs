@@ -10,6 +10,7 @@ public class Tests
     [Test]
     public void TestForPrim()
     {
-        Assert.Pass();
+        var a = 1;
+        Assert.That(1, Is.EqualTo(a));
     }
 }
