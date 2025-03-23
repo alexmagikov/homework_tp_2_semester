@@ -1,10 +1,11 @@
 ﻿namespace RoutersTests;
 
-public class Tests
+public class PrimTest
 {
     [SetUp]
     public void Setup()
     {
+        // fwfwe
     }
 
     [Test]

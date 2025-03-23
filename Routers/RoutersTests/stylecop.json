@@ -5,7 +5,7 @@
       "xmlHeader": false,
       "documentInterfaces": true,
       "documentExposedElements": true,
-      "documentInternalElements": false
+      "documentInternalElements": true
     }
   }
 }
