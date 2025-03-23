@@ -15,12 +15,38 @@ var outputPath = args[1];
 
 try
 {
-    var graph = CreateGraph.ReadFile(inputPath);
-    PrimFindMst.FindMst(graph);
+    var graph = new RoutersGraph(inputPath);
+    /*foreach (var vertex in graph.Graph)
+    {
+        Console.Write($"Vertex {vertex.Key}: ");
+        foreach (var edge in vertex.Value)
+        {
+            Console.Write($"(to: {edge.Key}, weight: {edge.Value}) ");
+        }
+
+        Console.WriteLine();
+    }*/
+    var resultGraph = PrimFindMst.FindMst(graph);
+    /*foreach (var vertex in resultGraph.Graph)
+    {
+        Console.Write($"Vertex {vertex.Key}: ");
+        foreach (var edge in vertex.Value)
+        {
+            Console.Write($"(to: {edge.Key}, weight: {edge.Value}) ");
+        }
+
+        Console.WriteLine();
+    }*/
+    resultGraph.WriteToFile(outputPath);
 }
 catch (FileNotFoundException exception)
 {
     Console.WriteLine($"File not found: {exception.FileName}");
+    return 1;
+}
+catch (IOException exception)
+{
+    Console.WriteLine($"IO: {exception.Message}");
     return 1;
 }
 catch (FormatException exception)
@@ -28,7 +54,7 @@ catch (FormatException exception)
     Console.WriteLine(exception.Message);
     return 1;
 }
-catch (Exception exception)
+catch (NotConnectedGraphException exception)
 {
     Console.WriteLine(exception.Message);
     return 1;

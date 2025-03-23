@@ -2,61 +2,84 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using System.ComponentModel.DataAnnotations;
-
 namespace Routers;
 
 /// <summary>
 /// Search MST.
 /// </summary>
-public class PrimFindMst
+public static class PrimFindMst
 {
     /// <summary>
     /// Find MST by Prim`s algorithm.
     /// </summary>
     /// <param name="graph">Input graph.</param>
     /// <returns>Result Mst.</returns>
-    public static Dictionary<int, List<(int Router, int LengthOfEdge)>> FindMst(Dictionary<int, List<(int Router, int LengthEdge)>> graph)
+    public static RoutersGraph FindMst(RoutersGraph graph)
     {
-        Dictionary<int, List<(int, int)>> resultGraph = new();
-        PriorityQueue<int, int> priorityQueue = new(Comparer<int>.Create((x, y) => y.CompareTo(x)));
+        var resultGraph = new RoutersGraph();
 
         var distancesToMst = GetTheInitialArrayOfDistancesFromGraph(graph);
-        distancesToMst[graph.Keys.First()] = 0;
+        distancesToMst[graph.Graph.Keys.First()] = 0;
 
-        var currentVertex = priorityQueue.Dequeue();
-        for (int i = 0; i < distancesToMst.Length; i++)
+        PriorityQueue<int, int> priorityQueue = new(Comparer<int>.Create((x, y) => y.CompareTo(x)));
+        foreach (var key in distancesToMst.Keys)
         {
-            foreach (var router in graph[currentVertex])
+            priorityQueue.Enqueue(key, distancesToMst[key]);
+        }
+
+        Dictionary<int, int> parents = new();
+
+        while (priorityQueue.Count > 0)
+        {
+            var currentRouter = priorityQueue.Dequeue();
+            if (parents.ContainsKey(currentRouter))
             {
-                var isRouterInQueue = priorityQueue.UnorderedItems.Any(item => item.Element == router.Router);
-                if (isRouterInQueue && graph[currentVertex])
+                resultGraph.AddEdgeOfRouters(parents[currentRouter], currentRouter, distancesToMst[currentRouter]);
+            }
+
+            foreach (var router in graph.Graph[currentRouter].Keys)
+            {
+                var isRouterInQueue = priorityQueue.UnorderedItems.Any(item => item.Element == router);
+                if (isRouterInQueue && (graph.Graph[currentRouter][router] > distancesToMst[router]))
                 {
-                    
+                    distancesToMst[router] = graph.Graph[currentRouter][router];
+                    parents[router] = currentRouter;
+                    priorityQueue.Enqueue(router, distancesToMst[router]);
                 }
             }
         }
-    }
-    
-    private static int[] GetTheInitialArrayOfDistancesFromGraph(Dictionary<int, List<(int Router, int LengthEdge)>> graph)
-    {
-        HashSet<int> vertices = [];
-        foreach (var key in graph.Keys)
+
+        if (GetCountOfRoutersByGraph(graph) != GetCountOfRoutersByGraph(resultGraph))
         {
-            vertices.Add(key);
-            foreach (var edge in graph[key])
-            {
-                vertices.Add(edge.Router);
-            }
+            throw new NotConnectedGraphException("Not connected graph");
         }
 
-        int vertexCount = vertices.Count;
-        int[] distances = new int[vertexCount];
-        for (int i = 0; i < vertexCount; i++)
+        return resultGraph;
+    }
+
+    private static Dictionary<int, int> GetTheInitialArrayOfDistancesFromGraph(RoutersGraph graph)
+    {
+        Dictionary<int, int> distances = new();
+        foreach (var router in graph.Graph.Keys)
         {
-            distances[i] = -1;
+            distances[router] = -1;
         }
 
         return distances;
+    }
+
+    private static int GetCountOfRoutersByGraph(RoutersGraph graph)
+    {
+        HashSet<int> routers = [];
+        foreach (var key in graph.Graph.Keys)
+        {
+            routers.Add(key);
+            foreach (var edge in graph.Graph[key].Keys)
+            {
+                routers.Add(edge);
+            }
+        }
+
+        return routers.Count;
     }
 }
