@@ -34,8 +34,6 @@ try
         {
             Console.Write($"(to: {edge.Key}, weight: {edge.Value}) ");
         }
-
-        Console.WriteLine();
     }*/
     resultGraph.WriteToFile(outputPath);
 }
