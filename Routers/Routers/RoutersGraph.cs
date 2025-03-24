@@ -73,6 +73,42 @@ public class RoutersGraph
         }
     }
 
+    /// <summary>
+    /// Compare 2 graphs.
+    /// </summary>
+    /// <param name="otherGraph">Other Graph.</param>
+    /// <returns>True if they are equal, else - false.</returns>
+    public bool CompareGraph(RoutersGraph otherGraph)
+    {
+        if (this.Graph.Count != otherGraph.Graph.Count)
+        {
+            return false;
+        }
+
+        foreach (var (router, adjacentRouters) in this.Graph)
+        {
+            if (!otherGraph.Graph.ContainsKey(router) || adjacentRouters.Count != otherGraph.Graph[router].Count)
+            {
+                return false;
+            }
+
+            foreach (var (adjacentRouter, lengthOfEdge) in adjacentRouters)
+            {
+                if (!otherGraph.Graph[router].ContainsKey(adjacentRouter))
+                {
+                    return false;
+                }
+
+                if (otherGraph.Graph[router][adjacentRouter] != lengthOfEdge)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     private static Dictionary<int, Dictionary<int, int>> ReadFile(string path)
     {
         Dictionary<int, Dictionary<int, int>> resultGraph = new();

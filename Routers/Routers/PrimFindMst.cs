@@ -16,22 +16,34 @@ public static class PrimFindMst
     /// <returns>Result Mst.</returns>
     public static RoutersGraph FindMst(RoutersGraph graph)
     {
+        if (graph.Graph.Count == 0)
+        {
+            throw new NullGraphException("Null graph");
+        }
+
         var resultGraph = new RoutersGraph();
 
         var distancesToMst = GetTheInitialArrayOfDistancesFromGraph(graph);
         distancesToMst[graph.Graph.Keys.First()] = 0;
 
         PriorityQueue<int, int> priorityQueue = new(Comparer<int>.Create((x, y) => y.CompareTo(x)));
-        foreach (var key in distancesToMst.Keys)
-        {
-            priorityQueue.Enqueue(key, distancesToMst[key]);
-        }
+        priorityQueue.Enqueue(graph.Graph.Keys.First(), distancesToMst[graph.Graph.Keys.First()]);
+
+        var inMst = new HashSet<int>();
 
         Dictionary<int, int> parents = new();
 
         while (priorityQueue.Count > 0)
         {
             var currentRouter = priorityQueue.Dequeue();
+
+            if (inMst.Contains(currentRouter))
+            {
+                continue;
+            }
+
+            inMst.Add(currentRouter);
+
             if (parents.ContainsKey(currentRouter))
             {
                 resultGraph.AddEdgeOfRouters(parents[currentRouter], currentRouter, distancesToMst[currentRouter]);
@@ -39,8 +51,7 @@ public static class PrimFindMst
 
             foreach (var router in graph.Graph[currentRouter].Keys)
             {
-                var isRouterInQueue = priorityQueue.UnorderedItems.Any(item => item.Element == router);
-                if (isRouterInQueue && (graph.Graph[currentRouter][router] > distancesToMst[router]))
+                if (!inMst.Contains(router) && (graph.Graph[currentRouter][router] > distancesToMst[router]))
                 {
                     distancesToMst[router] = graph.Graph[currentRouter][router];
                     parents[router] = currentRouter;

@@ -16,25 +16,7 @@ var outputPath = args[1];
 try
 {
     var graph = new RoutersGraph(inputPath);
-    /*foreach (var vertex in graph.Graph)
-    {
-        Console.Write($"Vertex {vertex.Key}: ");
-        foreach (var edge in vertex.Value)
-        {
-            Console.Write($"(to: {edge.Key}, weight: {edge.Value}) ");
-        }
-
-        Console.WriteLine();
-    }*/
     var resultGraph = PrimFindMst.FindMst(graph);
-    /*foreach (var vertex in resultGraph.Graph)
-    {
-        Console.Write($"Vertex {vertex.Key}: ");
-        foreach (var edge in vertex.Value)
-        {
-            Console.Write($"(to: {edge.Key}, weight: {edge.Value}) ");
-        }
-    }*/
     resultGraph.WriteToFile(outputPath);
 }
 catch (FileNotFoundException exception)

@@ -24,4 +24,23 @@
         <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Routers\Routers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="TestFiles\TestForNoConnectedGraph_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestForNoConnectedGraph_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\TestForNormalGraph_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestForNormalGraph_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\TestForFormatException_ShouldCreateTheMst.txt&quot;" />
+      <None Include="TestFiles\TestForFormatException_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
