@@ -1,8 +1,10 @@
-﻿using System.Reflection;
+﻿// <copyright file="PrimTests.cs" company="PlaceholderCompany">
+// Copyright (c) PlaceholderCompany. All rights reserved.
+// </copyright>
 
 namespace RoutersTests;
 
-using NUnit.Framework.Internal;
+using System.Reflection;
 using Routers;
 
 /// <summary>
@@ -10,7 +12,7 @@ using Routers;
 /// </summary>
 public class PrimTests
 {
-    /*/// <summary>
+    /// <summary>
     /// Test for normal value for Prim`s algo.
     /// </summary>
     [Test]
@@ -43,9 +45,9 @@ public class PrimTests
     {
         Assert.Throws<FormatException>(() =>
         {
-            var routersGraph = new RoutersGraph(GetTestFilePath("TestForFormatException_ShouldCreateTheMst.txt"));
+            var unused = new RoutersGraph(GetTestFilePath("TestForFormatException_ShouldCreateTheMst.txt"));
         });
-    }*/
+    }
 
     /// <summary>
     /// Test for null graph.
