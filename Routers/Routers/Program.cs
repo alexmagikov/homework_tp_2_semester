@@ -39,5 +39,19 @@ catch (NotConnectedGraphException exception)
     Console.WriteLine(exception.Message);
     return 1;
 }
+catch (NullGraphException exception)
+{
+    Console.WriteLine(exception.Message);
+    return 1;
+}
+catch (Exception exception)
+{
+    Console.WriteLine(exception.Message);
+    return 1;
+}
+finally
+{
+    Console.WriteLine("Done");
+}
 
 return 0;
