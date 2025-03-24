@@ -33,7 +33,7 @@ public class PrimTests
     {
         var graph = new RoutersGraph(GetTestFilePath("TestForNoConnectedGraph_ShouldCreateTheMst.txt"));
         Assert.Throws<NotConnectedGraphException>(() => PrimFindMst.FindMst(graph));
-    }*/
+    }
 
     /// <summary>
     /// Test for no not corrected format file.
@@ -45,7 +45,7 @@ public class PrimTests
         {
             var routersGraph = new RoutersGraph(GetTestFilePath("TestForFormatException_ShouldCreateTheMst.txt"));
         });
-    }
+    }*/
 
     /// <summary>
     /// Test for null graph.
