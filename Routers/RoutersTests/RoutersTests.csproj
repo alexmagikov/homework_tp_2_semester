@@ -38,9 +38,17 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
       <None Remove="TestFiles\TestForFormatException_ShouldCreateTheMst.txt&quot;" />
-      <None Include="TestFiles\TestForFormatException_ShouldCreateTheMst.txt">
+      <Content Include="TestFiles\TestForFormatException_ShouldCreateTheMst.txt">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
+      </Content>
+      <None Remove="TestFiles\TestForGraphWithNegativeWeight_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestForGraphWithNegativeWeight_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\TestFor1RouterGraph_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestFor1EdgeGraph_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

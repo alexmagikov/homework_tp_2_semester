@@ -82,12 +82,12 @@ public static class PrimFindMst
     private static int GetCountOfRoutersByGraph(RoutersGraph graph)
     {
         HashSet<int> routers = [];
-        foreach (var key in graph.Graph.Keys)
+        foreach (var keyRouter in graph.Graph.Keys)
         {
-            routers.Add(key);
-            foreach (var edge in graph.Graph[key].Keys)
+            routers.Add(keyRouter);
+            foreach (var router in graph.Graph[keyRouter].Keys)
             {
-                routers.Add(edge);
+                routers.Add(router);
             }
         }
 

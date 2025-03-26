@@ -54,14 +54,15 @@ public class RoutersGraph
     public void WriteToFile(string path)
     {
         using StreamWriter writer = new(path);
-        foreach (var key in this.Graph.Keys)
+        var currentIndexEnd = 0;
+        foreach (var keyRouter in this.Graph.Keys)
         {
-            int currentIndex = 0;
-            writer.Write($"{key}: ");
-            foreach (var edge in this.Graph[key])
+            var currentIndex = 0;
+            writer.Write($"{keyRouter}: ");
+            foreach (var router in this.Graph[keyRouter])
             {
-                writer.Write($"{edge.Key} ({edge.Value})");
-                if (currentIndex < this.Graph[key].Count - 1)
+                writer.Write($"{router.Key} ({router.Value})");
+                if (currentIndex < this.Graph[keyRouter].Count - 1)
                 {
                     writer.Write(", ");
                 }
@@ -69,7 +70,12 @@ public class RoutersGraph
                 currentIndex++;
             }
 
-            writer.Write("\n");
+            if (currentIndexEnd < this.Graph.Keys.Count - 1)
+            {
+                writer.Write("\n");
+            }
+
+            currentIndexEnd++;
         }
     }
 
@@ -122,10 +128,9 @@ public class RoutersGraph
                 throw new FormatException("Invalid file format");
             }
 
-            var key = int.Parse(parts[0].Trim());
+            var keyRouter = int.Parse(parts[0].Trim());
             var adjacentRouters = parts[1].Trim();
             var pairs = adjacentRouters.Split(',', StringSplitOptions.RemoveEmptyEntries);
-
             foreach (var pair in pairs)
             {
                 var pairData = pair.Trim().Split(['(', ')'], StringSplitOptions.RemoveEmptyEntries);
@@ -136,10 +141,14 @@ public class RoutersGraph
 
                 var router = int.Parse(pairData[0].Trim());
                 var lengthOfEdge = int.Parse(pairData[1].Trim());
-
-                if (!resultGraph.ContainsKey(key))
+                if (lengthOfEdge < 0)
                 {
-                    resultGraph[key] = new Dictionary<int, int>();
+                    throw new InvalidWeightEdgeException("Not corrected weight of edge");
+                }
+
+                if (!resultGraph.ContainsKey(keyRouter))
+                {
+                    resultGraph[keyRouter] = new Dictionary<int, int>();
                 }
 
                 if (!resultGraph.ContainsKey(router))
@@ -147,8 +156,8 @@ public class RoutersGraph
                     resultGraph[router] = new Dictionary<int, int>();
                 }
 
-                resultGraph[key][router] = lengthOfEdge;
-                resultGraph[router][key] = lengthOfEdge;
+                resultGraph[keyRouter][router] = lengthOfEdge;
+                resultGraph[router][keyRouter] = lengthOfEdge;
             }
         }
 

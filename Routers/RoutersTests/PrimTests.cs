@@ -59,6 +59,31 @@ public class PrimTests
         Assert.Throws<NullGraphException>(() => PrimFindMst.FindMst(graph));
     }
 
+    /// <summary>
+    /// Test for graph with 1 router.
+    /// </summary>
+    [Test]
+    public void TestFor1EdgeGraph_ShouldCreateTheMst()
+    {
+        var graph = new RoutersGraph(GetTestFilePath("TestFor1EdgeGraph_ShouldCreateTheMst.txt"));
+        var resultGraph = PrimFindMst.FindMst(graph);
+        var expectedGraph = new RoutersGraph();
+        expectedGraph.AddEdgeOfRouters(1, 2, 10);
+        Assert.That(resultGraph.CompareGraph(expectedGraph), Is.EqualTo(true));
+    }
+
+    /// <summary>
+    /// Test for graph with negative weight of the edge between 2 routers.
+    /// </summary>
+    [Test]
+    public void TestForGraphWithNegativeWeight_ShouldCreateTheMst()
+    {
+        Assert.Throws<InvalidWeightEdgeException>(() =>
+        {
+            var unused = new RoutersGraph(GetTestFilePath("TestForGraphWithNegativeWeight_ShouldCreateTheMst.txt"));
+        });
+    }
+
     private static string GetTestFilePath(string fileName)
     {
         var testDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);

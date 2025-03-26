@@ -18,6 +18,7 @@ try
     var graph = new RoutersGraph(inputPath);
     var resultGraph = PrimFindMst.FindMst(graph);
     resultGraph.WriteToFile(outputPath);
+    Console.WriteLine($"Graph written to {outputPath}");
 }
 catch (FileNotFoundException exception)
 {
@@ -48,10 +49,6 @@ catch (Exception exception)
 {
     Console.WriteLine(exception.Message);
     return 1;
-}
-finally
-{
-    Console.WriteLine("Done");
 }
 
 return 0;
