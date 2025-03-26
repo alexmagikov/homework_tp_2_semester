@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.2"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1"/>
+        <PackageReference Include="NUnit" Version="4.1.0"/>
+        <PackageReference Include="NUnit.Analyzers" Version="4.2.0"/>
+        <PackageReference Include="NUnit3TestAdapter" Version="4.6.0"/>
+        <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="NUnit.Framework"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Routers\Routers.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="TestFiles\TestForNoConnectedGraph_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestForNoConnectedGraph_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\TestForNormalGraph_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestForNormalGraph_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\TestForFormatException_ShouldCreateTheMst.txt&quot;" />
+      <Content Include="TestFiles\TestForFormatException_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\TestForGraphWithNegativeWeight_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestForGraphWithNegativeWeight_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="TestFiles\TestFor1RouterGraph_ShouldCreateTheMst.txt" />
+      <Content Include="TestFiles\TestFor1EdgeGraph_ShouldCreateTheMst.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+</Project>
