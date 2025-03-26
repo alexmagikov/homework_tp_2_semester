@@ -122,17 +122,21 @@ public class RoutersGraph
                 throw new FormatException("Invalid file format");
             }
 
-            var key = int.Parse(parts[0]);
-            var valueParts = parts[1].Split(['(', ',', ')'], StringSplitOptions.RemoveEmptyEntries);
-            if (valueParts.Length == 0 || valueParts.Length % 2 != 0)
-            {
-                throw new FormatException("Invalid file format");
-            }
+            var key = int.Parse(parts[0].Trim());
+            var adjacentRouters = parts[1].Trim();
+            var pairs = adjacentRouters.Split(',', StringSplitOptions.RemoveEmptyEntries);
 
-            for (var i = 0; i < valueParts.Length; i += 2)
+            foreach (var pair in pairs)
             {
-                var router = int.Parse(valueParts[i].Trim());
-                var lengthOfEdge = int.Parse(valueParts[i + 1].Trim());
+                var pairData = pair.Trim().Split(['(', ')'], StringSplitOptions.RemoveEmptyEntries);
+                if (pairData.Length != 2)
+                {
+                    throw new FormatException("Invalid file format");
+                }
+
+                var router = int.Parse(pairData[0].Trim());
+                var lengthOfEdge = int.Parse(pairData[1].Trim());
+
                 if (!resultGraph.ContainsKey(key))
                 {
                     resultGraph[key] = new Dictionary<int, int>();
