@@ -23,12 +23,12 @@ public abstract class Operator : Node
     /// <summary>
     /// Gets left operand.
     /// </summary>
-    public Node LeftOperand { get; }
+    protected Node LeftOperand { get; }
 
     /// <summary>
     /// Gets right operand.
     /// </summary>
-    public Node RightOperand { get; }
+    protected Node RightOperand { get; }
 
     /// <summary>
     /// Calculate node value.
