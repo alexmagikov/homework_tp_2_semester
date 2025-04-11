@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlWork", "ControlWork\ControlWork.csproj", "{DDC1FA4D-CB5D-4102-B438-B027EA60F4C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ControlWorkTests", "ControlWorkTests\ControlWorkTests.csproj", "{2995E7AF-9288-49DC-B746-9C7E8CE1E4E6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDC1FA4D-CB5D-4102-B438-B027EA60F4C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC1FA4D-CB5D-4102-B438-B027EA60F4C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC1FA4D-CB5D-4102-B438-B027EA60F4C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC1FA4D-CB5D-4102-B438-B027EA60F4C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2995E7AF-9288-49DC-B746-9C7E8CE1E4E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2995E7AF-9288-49DC-B746-9C7E8CE1E4E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2995E7AF-9288-49DC-B746-9C7E8CE1E4E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2995E7AF-9288-49DC-B746-9C7E8CE1E4E6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
