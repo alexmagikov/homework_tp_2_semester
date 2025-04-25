@@ -8,7 +8,6 @@
     <IsPackable>false</IsPackable>
 	<UseWindowsForms>false</UseWindowsForms>
 	<EnableWindowsTargeting>true</EnableWindowsTargeting>
-	<EnableWindowsTargeting>true</EnableWindowsTargeting>
 	<IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
