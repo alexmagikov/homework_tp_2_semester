@@ -6,8 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-	<UseWindowsForms>true</UseWindowsForms>
+	<UseWindowsForms>false</UseWindowsForms>
 	<EnableWindowsTargeting>true</EnableWindowsTargeting>
+	<EnableWindowsTargeting>true</EnableWindowsTargeting>
+	<IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
