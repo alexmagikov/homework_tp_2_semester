@@ -37,7 +37,8 @@ public class CalculatorProcessTests
     {
         calculator.ProcessInput("2");
         calculator.ProcessInput("/");
-        Assert.Throws<DivideByZeroException>(() => calculator.ProcessInput("0"));
+        calculator.ProcessInput("0");
+        Assert.Throws<DivideByZeroException>(() => calculator.ProcessInput("="));
     }
 
     [Test]
@@ -54,6 +55,17 @@ public class CalculatorProcessTests
         calculator.ProcessInput("2");
         calculator.ProcessInput("=");
         Assert.That(calculator.CurrentValue, Is.EqualTo(-2));
+    }
+
+    [Test]
+    public void TestForComplexNumbers_ShouldCalculatorProcessReturnNormalValue()
+    {
+        calculator.ProcessInput("1");
+        calculator.ProcessInput("+");
+        calculator.ProcessInput("1");
+        calculator.ProcessInput("2");
+        calculator.ProcessInput("=");
+        Assert.That(calculator.CurrentValue, Is.EqualTo(13));
     }
 }
 

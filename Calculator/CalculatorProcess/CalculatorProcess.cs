@@ -2,7 +2,7 @@
 // Copyright (c) AlexMagikov. All rights reserved.
 // </copyright>
 
-namespace Calculator;
+namespace CalculatorProcess;
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -46,6 +46,7 @@ public class CalculatorProcess : INotifyPropertyChanged
                     this.CurrentValue = value;
                     this.NotifyPropertyChanged(nameof(this.CurrentValue));
                     this.State = States.EnteringOperator;
+                    this.ShouldRepeatLastOperator = false;
                     break;
                 case States.EnteringOperator:
                     var currentNumber = this.CurrentValue.ToString() + textButton;
@@ -73,28 +74,19 @@ public class CalculatorProcess : INotifyPropertyChanged
         {
             if (this.State == States.EnteringOperator)
             {
-                var tmp = this.CurrentValue;
-                this.CurrentValue = this.Calculate(this.CurrentValue, this.CurrentOperator);
-                if (!this.ShouldRepeatLastOperator)
-                {
-                    this.LastValue = tmp;
-                }
-
-                this.ShouldRepeatLastOperator = true;
+                this.CurrentValue = this.Calculate(this.LastValue, this.CurrentOperator);
             }
 
             this.NotifyPropertyChanged(nameof(this.CurrentValue));
         }
         else
         {
-            if (this.State == States.EnteringOperator && !string.IsNullOrEmpty(this.CurrentOperator))
+            if (this.State == States.EnteringOperator)
             {
-                this.CurrentValue = this.Calculate(this.CurrentValue, this.CurrentOperator);
+                this.CurrentOperator = textButton;
+                this.State = States.EnteringSecondOperand;
+                this.NotifyPropertyChanged(nameof(this.CurrentValue));
             }
-
-            this.CurrentOperator = textButton;
-            this.State = States.EnteringSecondOperand;
-            this.NotifyPropertyChanged(nameof(this.CurrentValue));
         }
     }
 
@@ -102,7 +94,6 @@ public class CalculatorProcess : INotifyPropertyChanged
     {
         this.State = States.EnteringFirstOperand;
         this.CurrentValue = 0;
-        this.LastValue = 0;
         this.ShouldRepeatLastOperator = false;
         this.NotifyPropertyChanged(nameof(this.CurrentValue));
     }
@@ -110,10 +101,10 @@ public class CalculatorProcess : INotifyPropertyChanged
     private float Calculate(float inputValue, string operatorValue)
         => operatorValue switch
         {
-            "+" => this.LastValue + inputValue,
-            "-" => this.LastValue - inputValue,
-            "*" => this.LastValue * inputValue,
-            "/" => inputValue == 0 ? throw new DivideByZeroException() : this.LastValue / inputValue,
+            "+" => this.CurrentValue + inputValue,
+            "-" => this.CurrentValue - inputValue,
+            "*" => this.CurrentValue * inputValue,
+            "/" => inputValue == 0 ? throw new DivideByZeroException() : this.CurrentValue / inputValue,
             _ => throw new InvalidOperationException($"Unknown operator: {operatorValue}"),
         };
 
@@ -125,3 +116,4 @@ public class CalculatorProcess : INotifyPropertyChanged
         this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 }
+
