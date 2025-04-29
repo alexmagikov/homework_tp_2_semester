@@ -23,6 +23,8 @@ public class CalculatorProcess : INotifyPropertyChanged
 
     private bool ShouldRepeatLastOperator { get; set; } = false;
 
+    private bool IsNegativeInput { get; set; } = false;
+
     private enum States
     {
         EnteringFirstOperand,
@@ -43,9 +45,10 @@ public class CalculatorProcess : INotifyPropertyChanged
             switch (this.State)
             {
                 case States.EnteringFirstOperand:
-                    this.CurrentValue = value;
+                    this.CurrentValue = this.IsNegativeInput ? -value : value;
                     this.NotifyPropertyChanged(nameof(this.CurrentValue));
                     this.State = States.EnteringOperator;
+                    this.IsNegativeInput = false;
                     break;
                 case States.EnteringOperator:
                     var currentNumber = this.CurrentValue.ToString() + textButton;
@@ -58,10 +61,11 @@ public class CalculatorProcess : INotifyPropertyChanged
                     break;
                 case States.EnteringSecondOperand:
                     this.LastValue = this.CurrentValue;
-                    this.CurrentValue = value;
+                    this.CurrentValue = this.IsNegativeInput ? -value : value;
                     this.NotifyPropertyChanged(nameof(this.CurrentValue));
                     this.State = States.EnteringOperator;
                     this.ShouldRepeatLastOperator = false;
+                    this.IsNegativeInput = false;
                     break;
             }
         }
@@ -85,17 +89,36 @@ public class CalculatorProcess : INotifyPropertyChanged
 
             this.NotifyPropertyChanged(nameof(this.CurrentValue));
         }
+        else if (textButton == "-")
+        {
+            if (this.State == States.EnteringFirstOperand ||
+                this.State == States.EnteringSecondOperand)
+            {
+                this.IsNegativeInput = true;
+            }
+            else
+            {
+                this.ProcessOperator(textButton);
+            }
+        }
         else
         {
-            if (this.State == States.EnteringOperator && !string.IsNullOrEmpty(this.CurrentOperator))
-            {
-                this.CurrentValue = this.Calculate(this.CurrentValue, this.CurrentOperator);
-            }
-
-            this.CurrentOperator = textButton;
-            this.State = States.EnteringSecondOperand;
-            this.NotifyPropertyChanged(nameof(this.CurrentValue));
+            this.ProcessOperator(textButton);
         }
+    }
+
+    private void ProcessOperator(string textButton)
+    {
+        if (this.State == States.EnteringOperator &&
+            !string.IsNullOrEmpty(this.CurrentOperator) &&
+            !this.ShouldRepeatLastOperator)
+        {
+            this.CurrentValue = this.Calculate(this.CurrentValue, this.CurrentOperator);
+        }
+
+        this.CurrentOperator = textButton;
+        this.State = States.EnteringSecondOperand;
+        this.NotifyPropertyChanged(nameof(this.CurrentValue));
     }
 
     private void Clear()
@@ -104,6 +127,7 @@ public class CalculatorProcess : INotifyPropertyChanged
         this.CurrentValue = 0;
         this.LastValue = 0;
         this.ShouldRepeatLastOperator = false;
+        this.IsNegativeInput = false;
         this.NotifyPropertyChanged(nameof(this.CurrentValue));
     }
 
