@@ -17,6 +17,7 @@ public class SkipList<T> : IList<T>
     private readonly IComparer<T> comparer;
     private Node root;
     private int count;
+    private int version = 1;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SkipList{T}"/> class.
@@ -78,6 +79,7 @@ public class SkipList<T> : IList<T>
         }
 
         this.count++;
+        this.version++;
     }
 
     /// <summary>
@@ -87,6 +89,7 @@ public class SkipList<T> : IList<T>
     {
         this.root = new Node(default!, null, null);
         this.count = 0;
+        this.version = 1;
     }
 
     /// <summary>
@@ -144,9 +147,7 @@ public class SkipList<T> : IList<T>
 
     /// <inheritdoc/>
     public void Insert(int index, T item)
-    {
-        throw new NotSupportedException("Operation is not supported");
-    }
+        => throw new NotSupportedException("Operation is not supported");
 
     /// <summary>
     /// Remove item from SkipList.
@@ -159,6 +160,7 @@ public class SkipList<T> : IList<T>
         if (res)
         {
             this.count--;
+            this.version++;
         }
 
         return res;
@@ -174,6 +176,7 @@ public class SkipList<T> : IList<T>
         }
 
         this.count--;
+        this.version++;
         this.DeleteByNode(node, node.Key);
     }
 
@@ -294,6 +297,7 @@ public class SkipList<T> : IList<T>
     public struct Enumerator(SkipList<T> skipList) : IEnumerator<T>
     {
         private readonly Node root = skipList.root;
+        private readonly int lastVersion = skipList.version;
         private Node? current = null;
 
         /// <summary>
@@ -323,9 +327,14 @@ public class SkipList<T> : IList<T>
         /// <inheritdoc/>
         public bool MoveNext()
         {
+            if (this.lastVersion != skipList.version)
+            {
+                throw new InvalidOperationException("Collection modified");
+            }
+
             if (this.current == null)
             {
-                var firstNode = GetFirstNode(this.root);
+                var firstNode = this.GetFirstNode();
                 if (firstNode == null)
                 {
                     return false;
@@ -343,9 +352,9 @@ public class SkipList<T> : IList<T>
         public void Reset()
             => this.current = null;
 
-        private static Node? GetFirstNode(Node root)
+        private Node? GetFirstNode()
         {
-            var current = root;
+            var current = this.root;
             while (current.Down != null)
             {
                 current = current.Down;

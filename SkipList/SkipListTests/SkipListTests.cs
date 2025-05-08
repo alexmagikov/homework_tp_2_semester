@@ -130,4 +130,15 @@ public class SkipListTests
 
         Assert.That(this.skipList.Contains(2), Is.EqualTo(true));
     }
+
+    [Test]
+    public void TestForOperatorsDisbility()
+    {
+        this.skipList.Add(1);
+        this.skipList.Add(2);
+        var enumerator = this.skipList.GetEnumerator();
+        this.skipList.Add(3);
+
+        Assert.Throws<InvalidOperationException>(() => enumerator.MoveNext());
+    }
 }
