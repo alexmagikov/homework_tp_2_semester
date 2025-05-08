@@ -11,7 +11,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Skip list implementation.
 /// </summary>
-/// <typeparam name="T">Type of SkipList element.</typeparam>
+/// <typeparam name="T">Type of SkipList item.</typeparam>
 public class SkipList<T> : IList<T>
 {
     private readonly IComparer<T> comparer;
@@ -25,7 +25,7 @@ public class SkipList<T> : IList<T>
     public SkipList(IComparer<T> comparer)
     {
         this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
-        this.root = new Node(default, null, null);
+        this.root = new Node(default!, null, null);
         this.count = 0;
     }
 
@@ -40,45 +40,40 @@ public class SkipList<T> : IList<T>
     public bool IsReadOnly => false;
 
     /// <summary>
-    /// Operations with element by index in SkipList.
+    /// Operations with item by index in SkipList.
     /// </summary>
     /// <param name="index">Index.</param>
-    /// <returns>Get - element in SkipList, Set - set element in SkipList.</returns>
+    /// <returns>Get - item in SkipList, Set - set item in SkipList.</returns>
     /// <exception cref="ArgumentOutOfRangeException">If index not corrected.</exception>
     public T this[int index]
     {
         get
         {
-            if (index < 0 || index >= this.count)
+            var node = this.GetNodeByIndex(index);
+            if (node == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new InvalidOperationException("Node not found");
             }
 
-            return this.GetNodeByIndex(index).Key;
+            return node.Key;
         }
 
         set
         {
-            if (index < 0 || index >= this.count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            var node = this.GetNodeByIndex(index);
-            node.Key = value;
+            throw new NotSupportedException("Operation is not supported");
         }
     }
 
     /// <summary>
-    /// Add element to SkipList.
+    /// Add item to SkipList.
     /// </summary>
-    /// <param name="element">Element.</param>
-    public void Add(T element)
+    /// <param name="item">Item.</param>
+    public void Add(T item)
     {
-        var newNode = this.InsertByNode(this.root, element);
+        var newNode = this.InsertByNode(this.root, item);
         if (newNode != null)
         {
-            var newRoot = new Node(default, null, this.root);
+            var newRoot = new Node(default!, null, this.root);
             this.root = newRoot;
         }
 
@@ -90,20 +85,20 @@ public class SkipList<T> : IList<T>
     /// </summary>
     public void Clear()
     {
-        this.root = new Node(default, null, null);
+        this.root = new Node(default!, null, null);
         this.count = 0;
     }
 
     /// <summary>
-    /// Check contains element in SkipList.
+    /// Check containing item in SkipList.
     /// </summary>
-    /// <param name="element">Element.</param>
-    /// <returns>True if element is contained in SkipList, else - false.</returns>
-    public bool Contains(T element)
-        => this.FindNode(element) != null;
+    /// <param name="item">item.</param>
+    /// <returns>True if item is contained in SkipList, else - false.</returns>
+    public bool Contains(T item)
+        => this.FindNode(item) != null;
 
     /// <summary>
-    /// Copy elements from SkipList to array startinf from arrayIndex.
+    /// Copy items from SkipList to array starting from arrayIndex.
     /// </summary>
     /// <param name="array">Array.</param>
     /// <param name="arrayIndex">Array index.</param>
@@ -111,14 +106,13 @@ public class SkipList<T> : IList<T>
     {
         ArgumentNullException.ThrowIfNull(array);
         ArgumentOutOfRangeException.ThrowIfNegative(arrayIndex);
-
         if (array.Length - arrayIndex < this.count)
         {
             throw new ArgumentException("Not enough space");
         }
 
         var current = this.GetFirstNode();
-        for (int i = 0; i < this.count; i++)
+        for (int i = 0; i < this.count && current != null; i++)
         {
             array[arrayIndex + i] = current.Key;
             current = current.Next;
@@ -126,17 +120,17 @@ public class SkipList<T> : IList<T>
     }
 
     /// <summary>
-    /// Return index of element.
+    /// Return index of item.
     /// </summary>
-    /// <param name="element">Element.</param>
-    /// <returns>Index if element in SkipList, else - -1.</returns>
-    public int IndexOf(T element)
+    /// <param name="item">item.</param>
+    /// <returns>Index if item in SkipList, else -- -1.</returns>
+    public int IndexOf(T item)
     {
         var current = this.GetFirstNode();
         int index = 0;
         while (current != null)
         {
-            if (this.comparer.Compare(current.Key, element) == 0)
+            if (this.comparer.Compare(current.Key, item) == 0)
             {
                 return index;
             }
@@ -148,54 +142,51 @@ public class SkipList<T> : IList<T>
         return -1;
     }
 
-    /// <summary>
-    /// Insert element to SkipList by index.
-    /// </summary>
-    /// <param name="index">Index.</param>
-    /// <param name="element">Element.</param>
-    /// <exception cref="ArgumentOutOfRangeException">Return exception if index is not corrected</exception>
-    public void Insert(int index, T element)
+    /// <inheritdoc/>
+    public void Insert(int index, T item)
     {
-        if (index < 0 || index > this.count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(index));
-        }
-
-        if (index == this.count)
-        {
-            this.Add(element);
-            return;
-        }
-
-        var newNode = this.InsertByNode(this.root, element);
-        this.count++;
+        throw new NotSupportedException("Operation is not supported");
     }
 
+    /// <summary>
+    /// Remove item from SkipList.
+    /// </summary>
+    /// <param name="item">item.</param>
+    /// <returns>True if element in SkipList, else - false.</returns>
     public bool Remove(T item)
     {
-        // todo
-    }
-
-    public void RemoveAt(int index)
-    {
-        if (index < 0 || index >= this.count)
+        var res = this.DeleteByNode(this.root, item);
+        if (res)
         {
-            throw new ArgumentOutOfRangeException(nameof(index));
+            this.count--;
         }
 
-        var node = this.GetNodeByIndex(index);
-        this.DeleteByNode(this.root, node.Key);
-        this.count--;
+        return res;
     }
-
-    public IEnumerator<T> GetEnumerator()
-    {
-        return new Enumerator(this);
-    }
-
 
     /// <inheritdoc/>
-    IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
+    public void RemoveAt(int index)
+    {
+        var node = this.GetNodeByIndex(index);
+        if (node == null)
+        {
+            throw new IndexOutOfRangeException("index");
+        }
+
+        this.count--;
+        this.DeleteByNode(node, node.Key);
+    }
+
+    /// <inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator()
+        => this.GetEnumerator();
+
+    /// <summary>
+    /// Get enumerator by root.
+    /// </summary>
+    /// <returns>New enumerator.</returns>
+    public IEnumerator<T> GetEnumerator()
+        => new Enumerator(this);
 
     private Node? GetNodeByIndex(int index)
     {
@@ -245,75 +236,128 @@ public class SkipList<T> : IList<T>
         return null;
     }
 
-    private Node? InsertByNode(Node res, T key)
+    private Node? InsertByNode(Node current, T item)
     {
-        while (res.Next != null && this.comparer.Compare(res.Next.Key, key) < 0)
+        while (current.Next != null && this.comparer.Compare(current.Next.Key, item) < 0)
         {
-            res = res.Next;
+            current = current.Next;
         }
 
         Node? downNode = null;
 
-        if (res.Down != null)
+        if (current.Down != null)
         {
-            downNode = this.InsertByNode(res.Down, key);
+            downNode = this.InsertByNode(current.Down, item);
         }
 
-        if (downNode != null || res.Down == null)
+        if (downNode != null || current.Down == null)
         {
-            res.Next = new Node(key, res.Next, downNode);
+            current.Next = new Node(item, current.Next, downNode);
             if (Random.Shared.Next(0, 2) == 0)
             {
-                return res.Next;
+                return current.Next;
             }
         }
 
         return null;
     }
 
-    private void DeleteByNode(Node res, T key)
+    private bool DeleteByNode(Node current, T key)
     {
-        while (res.Next != null && this.comparer.Compare(res.Next.Key, key) < 0)
+        bool deleted = false;
+        while (current.Next != null && this.comparer.Compare(current.Next.Key, key) < 0)
         {
-            res = res.Next;
+            current = current.Next;
         }
 
-        if (res.Down != null)
+        if (current.Down != null)
         {
-            this.DeleteByNode(res.Down, key);
+            deleted = this.DeleteByNode(current.Down, key) || deleted;
         }
 
-        if (res.Next != null && this.comparer.Compare(res.Next.Key, key) == 0)
+        if (current.Next != null && this.comparer.Compare(current.Next.Key, key) == 0)
         {
-            res.Next = res.Next.Next;
+            current.Next = current.Next.Next;
+            deleted = true;
         }
+
+        return deleted;
     }
 
-    public struct Enumerator : IEnumerator<T>, IEnumerator
+    /// <summary>
+    /// Enumerator for SkipList.
+    /// </summary>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="Enumerator"/> struct.
+    /// </remarks>
+    /// <param name="skipList">Input SkipList.</param>
+    public struct Enumerator(SkipList<T> skipList) : IEnumerator<T>
     {
-        public object Current => throw new NotImplementedException();
+        private readonly Node root = skipList.root;
+        private Node? current = null;
 
-        T IEnumerator<T>.Current => throw new NotImplementedException();
+        /// <summary>
+        /// Gets current item.
+        /// </summary>
+        public T Current
+        {
+            get
+            {
+                if (this.current == null)
+                {
+                    throw new InvalidOperationException();
+                }
 
+                return this.current.Key;
+            }
+        }
+
+        /// <inheritdoc/>
+        object? IEnumerator.Current => this.Current;
+
+        /// <inheritdoc/>
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public bool MoveNext()
         {
-            throw new NotImplementedException();
+            if (this.current == null)
+            {
+                var firstNode = GetFirstNode(this.root);
+                if (firstNode == null)
+                {
+                    return false;
+                }
+
+                this.current = firstNode;
+                return true;
+            }
+
+            this.current = this.current.Next;
+            return this.current != null;
         }
 
+        /// <inheritdoc/>
         public void Reset()
+            => this.current = null;
+
+        private static Node? GetFirstNode(Node root)
         {
-            throw new NotImplementedException();
+            var current = root;
+            while (current.Down != null)
+            {
+                current = current.Down;
+            }
+
+            return current.Next;
         }
     }
 
-    private class Node(T? key, Node? next, Node? down)
+    private class Node(T key, Node? next, Node? down)
     {
-        public T? Key { get; set; } = key;
+        public T Key { get; set; } = key;
 
         public Node? Next { get; set; } = next;
 
