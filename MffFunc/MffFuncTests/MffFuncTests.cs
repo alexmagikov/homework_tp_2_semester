@@ -1,6 +1,6 @@
 ﻿using MffFunc;
 
-namespace MffFuncTests;
+namespace MffFunctTests;
 
 public class Tests
 {
